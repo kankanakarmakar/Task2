@@ -1,1 +1,40 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
 
+df = pd.read_csv("Titanic-Dataset.csv")
+
+print(df.head())
+print(df.info())
+print(df.describe())
+print(df.isnull().sum())
+
+sns.heatmap(df.isnull(), cbar=False, cmap='magma')
+plt.title("Missing Values Heatmap")
+plt.show()
+
+plt.hist(df['Age'].dropna(), bins=20, color='skyblue', edgecolor='black')
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.title('Distribution of Age')
+plt.grid(True)
+plt.show()
+
+sns.boxplot(x='Pclass', y='Fare', data=df)
+plt.title('Fare by Passenger Class')
+plt.xlabel('Passenger Class')
+plt.ylabel('Fare')
+plt.show()
+
+fig = px.pie(df, names='Sex', title='Gender Distribution')
+fig.show()
+
+survival_gender = df.groupby(['Sex', 'Survived']).size().reset_index(name='Count')
+fig2 = px.bar(survival_gender, x='Sex', y='Count', color='Survived',
+              title='Survival Count by Gender', barmode='group')
+fig2.show()
+
+sns.pairplot(df[['Survived', 'Pclass', 'Age', 'Fare']].dropna(), hue='Survived')
+plt.suptitle('Pairplot of Key Features', y=1.02)
+plt.show()
